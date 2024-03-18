@@ -51,9 +51,10 @@ d. Display the Max value of the series.
 e. Display the Min value of the series.
 f. Display the Average of the series.
 g. Display the Number of elements in the series.
-g. Display the Sum of the series.
+h. Display the Sum of the series.
 i. Exit.
 Enter your choice (a-i): a
 Enter numbers separated by spaces: 1 2 3 4 5
 \`\`\`
+
 
