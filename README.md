@@ -56,5 +56,3 @@ i. Exit.
 Enter your choice (a-i): a
 Enter numbers separated by spaces: 1 2 3 4 5
 \`\`\`
-
-
