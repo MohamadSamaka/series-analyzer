@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 # Function to print the menu
 menu()
  {
@@ -21,10 +24,10 @@ menu()
 #   0 if the number is positive, 1 otherwise
 validate_positive_number() {
     re='^[0-9]+$'
-    if ! [[ $1 =~ $re ]] || [ $1 -le 0 ]; then
-        return 1
+    if [[ $1 =~ $re ]] && [ $1 -ge 0 ]; then
+        return 0
     fi
-    return 0
+    return 1
 }
 
 
@@ -35,16 +38,17 @@ validate_positive_number() {
 #   0 if the input is valid, 1 otherwise
 validateInput()
 {   
-    local series = $1
-    local series_length ="${#series[@]}"
+    series=$1
+    series_length="${#series[@]}"
     if (( series_length < 3)); then
         echo "Error: you need to enter at last three numbers!"
         return 1
     else
-        for num in series; do
-            if ! validate_positive_number(num)
-                echo "The numbers need to positive!"
+        for num in ${series[@]}; do
+            if ! validate_positive_number $num;
+                then echo "The numbers need to positive!"
                 return 1
+            fi
         done
         return 0
     fi
@@ -52,45 +56,56 @@ validateInput()
 
 
 updateInput()
-{
-    read -r "Enter numbers separated by spaces:" input
-    series=($input)
-    while ! validateInput($series); do
-        read -r "Renter numbers separated by spaces:" input
-        series=($input)
-    done   
+{ 
+    echo "Enter numbers separated by spaces:" 
+    read input
+    IFS=' ' read -r -a series <<< "$input"
+    echo ${series[@]}
+    while ! validateInput ${series[@]}; do
+        read -p "Renter numbers separated by spaces:" input
+        IFS=' ' read -r -a series <<< "$input"
+        echo ${series[@]}
+    done 
+    echo $series
 }
 
+displayYourSeries()
+{
+    echo "This is your series:"
+    for val in "${series[@]}"; do
+        echo -n $val
+    done
+    echo ""
+}
 
 
 main()
 {
      while true; do
-        local result
         menu
         read -p "Enter your choice (a-i): " choice
         case $choice in
             a)
-                   result=$(add $num1 $num2)
+                updateInput 
                ;;
             b)
-                   result=$(subtract $num1 $num2)
+                displayYourSeries $series
                ;;
             c) 
-                   result=$(multiply $num1 $num2)
+                  
                ;;
             d) 
-                   result=$(divide $num1 $num2)
+                   
 
                ;;
             e) 
-                   result=$(power_of  $num1 $num2)
+                   
                ;;
             f)
-                   result=$(modulus  $num1 $num2)
+                  
                ;;
             g)
-                   result=$(modulus  $num1 $num2)
+                  
                ;;
             i) echo "Exiting..."
                exit ;;
@@ -98,3 +113,6 @@ main()
         esac
     done
 }
+
+
+main
