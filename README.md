@@ -57,10 +57,3 @@ Enter your choice (a-i): a
 Enter numbers separated by spaces: 1 2 3 4 5
 \`\`\`
 
-## Contributions
-
-Contributions to the Series Analyzer script are welcome. If you find any issues or have suggestions for improvements, feel free to open an issue or create a pull request on the [GitHub repository](https://github.com/your-username/series-analyzer).
-
-## License
-
-This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute it according to the terms of the license.
