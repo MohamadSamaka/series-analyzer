@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# This script serves as a menu-driven application for analyzing numerical series.
+# It allows the user to input a series of numbers, and then perform various operations
+# such as sorting, finding the max/min value, calculating the average, etc.
 
-# Function to print the menu
+# Function to display the main menu options.
 menu()
- {
+{
     echo "Series Analyzer Menu:"
     echo "a. Input a Series"
     echo "b. Display the series in the order it was entered."
@@ -16,12 +19,7 @@ menu()
     echo "i. Exit."
 }
 
-
-# Function to check if a input  is a positive number
-# Arguments:
-#   $1: The number to check
-# Returns:
-#   0 if the number is positive, 1 otherwise
+# Function to validate if the input is a positive number.
 validate_positive_number() {
     re='^[0-9]+$'
     if [[ $1 =~ $re ]] && [ $1 -ge 0 ]; then
@@ -30,22 +28,18 @@ validate_positive_number() {
     return 1
 }
 
-# Function to check if a number is positive
-# Arguments:
-#   $1: The number to check
-# Returns:
-#   0 if the input is valid, 1 otherwise
+# Function to validate the input series. It checks for at least three numbers and positivity.
 validateInput()
 {   
     series=$1
     series_length="${#series[@]}"
     if (( series_length < 3)); then
-        echo "Error: you need to enter at last three numbers!"
+        echo "Error: you need to enter at least three numbers!"
         return 1
     else
         for num in ${series[@]}; do
-            if ! validate_positive_number $num;
-                then echo "The numbers need to positive!"
+            if ! validate_positive_number $num; then
+                echo "The numbers need to be positive!"
                 return 1
             fi
         done
@@ -53,7 +47,7 @@ validateInput()
     fi
 }
 
-
+# Function for updating the input series. It also validates the input using validateInput function.
 updateInput()
 { 
     echo "Enter numbers separated by spaces:" 
@@ -65,111 +59,96 @@ updateInput()
     done 
 }
 
-displayYourSeries()
+# Function to display the input series as it was entered.
+displaySeries()
 {
-    echo "This is your series:"
-    for val in "${series[@]}"; do
-        echo -n "$val "
-    done
-    echo ""
+    echo "This is your series: ${series[*]}"
 }
 
+# Function to display the series sorted in ascending order.
 displayedSorted(){
-    sorted_arr=($(printf "%s\n" "${series[@]}" | sort -n))
-    echo "this is your series"
-    for val in "${sorted_arr[@]}"; do
-        echo -n "$val "
-    done
-    echo ""
+    local sorted_arr=($(printf "%s\n" "${series[@]}" | sort -n))
+    echo "This is your series sorted: ${sorted_arr[*]}"
 }
 
+# Function to find and display the maximum value in the series.
 getMaxNumber(){
     max=${series[0]}
-    if (($series_length>1))
-    then
-        for val in "${series[@]}"; do
-            if (($val > $max))
-                then max=$val
-            fi
-        done
-        echo $max
-    else echo $max
-    fi
+    for val in "${series[@]}"; do
+        if (($val > $max)); then
+            max=$val
+        fi
+    done
+    echo "Max value: $max"
 }
 
+# Function to find and display the minimum value in the series.
 getMinNumber(){
-    echo "this is the max value in the series"
     min=${series[0]}
-    if (($series_length>1))
-    then
-        for val in "${series[@]}"; do
-            if (($val < $min))
-                then min=$val
-            fi
-        done
-        echo $min
-        else echo $min
-    fi
+    for val in "${series[@]}"; do
+        if (($val < $min)); then
+            min=$val
+        fi
+    done
+    echo "Min value: $min"
 }
 
-
+# Function to calculate and display the sum of the series.
 getSum(){
-    echo "this is the sum of the series"
     sum=0
     for val in "${series[@]}"; do
         sum=$(($sum+$val))
     done
-    echo "$sum"
+    echo "Sum of the series: $sum"
 }
 
+# Function to calculate and display the average value of the series.
 getAVG(){
-    echo "this is the avarage of the series"
     sum=0
     for val in "${series[@]}"; do
         sum=$(($sum+$val))
     done
     avg=$(($sum / $series_length))
-    echo "$avg"
+    echo "Average of the series: $avg"
 }
 
-
+# The main function that keeps the menu-driven program running.
 main()
 {
-     while true; do
+    while true; do
         menu
         read -p "Enter your choice (a-i): " choice
-        # clear
         case $choice in
             a)
                 updateInput $series
-               ;;
+                ;;
             b)
-                displayYourSeries
-               ;;
+                displaySeries
+                ;;
             c) 
                 displayedSorted
-               ;;
+                ;;
             d) 
                 getMaxNumber
-               ;;
+                ;;
             e) 
                 getMinNumber
-               ;;
+                ;;
             f)
                 getAVG
-               ;;
+                ;;
             g)
-                echo -e "the length is:\n$series_length"
-               ;;
+                echo -e "The length is:\n$series_length"
+                ;;
             h)
                 getSum
-               ;;
+                ;;
             i) echo "Exiting..."
-               exit ;;
+                exit ;;
             *) echo "Invalid choice! Please select a-i." ;;
         esac
     done
 }
 
-
+# Start the script by calling main function.
 main
