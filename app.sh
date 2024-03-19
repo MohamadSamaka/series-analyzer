@@ -20,8 +20,8 @@ menu()
 }
 
 # Function to validate if the input is a positive number.
-validate_positive_number() {
-    re='^[0-9]+$'
+isPositiveNumver() {
+    local re='^[0-9]+$'
     if [[ $1 =~ $re ]] && [ $1 -ge 0 ]; then
         return 0
     fi
@@ -31,93 +31,105 @@ validate_positive_number() {
 # Function to validate the input series. It checks for at least three numbers and positivity.
 validateInput()
 {   
-    series=$1
-    series_length="${#series[@]}"
+    local -a seriesToValidate=("$@") # -a means we are declaring an array
+    local series_length="${#seriesToValidate[@]}"
     if (( series_length < 3)); then
-        echo "Error: you need to enter at least three numbers!"
+        echo "[-] Error: you need to enter at least three numbers!"
         return 1
-    else
-        for num in ${series[@]}; do
-            if ! validate_positive_number $num; then
-                echo "The numbers need to be positive!"
-                return 1
-            fi
-        done
-        return 0
     fi
+    for num in ${seriesToValidate[@]}; do
+        if ! isPositiveNumver $num; then
+            echo "[-] The numbers need to be positive!"
+            return 1
+        fi
+    done
+    return 0
 }
+
 
 # Function for updating the input series. It also validates the input using validateInput function.
 updateInput()
 { 
-    echo "Enter numbers separated by spaces:" 
-    read input
-    IFS=' ' read -r -a series <<< "$input"
-    while ! validateInput ${series[@]}; do
-        read -p "Renter numbers separated by spaces:" input
-        IFS=' ' read -r -a series <<< "$input"
+    local -a input
+    read -p "[!] Enter numbers separated by spaces:" -ra input
+    while ! validateInput ${input[@]}; do
+        read -p "[!] Renter numbers separated by spaces:" input
     done 
+    series=("${input[@]}")
+    series_length="${#input[@]}"
+    series_initialized=true  # Update the flag
 }
 
 # Function to display the input series as it was entered.
 displaySeries()
 {
-    echo "This is your series: ${series[*]}"
+    echo "[+] This is your series: ${series[*]}"
 }
 
 # Function to display the series sorted in ascending order.
 displayedSorted(){
-    local sorted_arr=($(printf "%s\n" "${series[@]}" | sort -n))
-    echo "This is your series sorted: ${sorted_arr[*]}"
+    local -a sorted_arr=($(printf "%s\n" "${series[@]}" | sort -n))
+    echo "[+] This is your series sorted: ${sorted_arr[*]}"
 }
 
 # Function to find and display the maximum value in the series.
 getMaxNumber(){
-    max=${series[0]}
+    local max=${series[0]}
     for val in "${series[@]}"; do
         if (($val > $max)); then
             max=$val
         fi
     done
-    echo "Max value: $max"
+    echo "[+] This is your Max value: $max"
 }
 
 # Function to find and display the minimum value in the series.
 getMinNumber(){
-    min=${series[0]}
+    local min=${series[0]}
     for val in "${series[@]}"; do
         if (($val < $min)); then
             min=$val
         fi
     done
-    echo "Min value: $min"
+    echo "[+] Min value: $min"
 }
 
 # Function to calculate and display the sum of the series.
 getSum(){
-    sum=0
+    local sum=0
     for val in "${series[@]}"; do
         sum=$(($sum+$val))
     done
-    echo "Sum of the series: $sum"
+    echo "[+] Sum of the series: $sum"
 }
 
 # Function to calculate and display the average value of the series.
 getAVG(){
-    sum=0
+    local sum=0
     for val in "${series[@]}"; do
         sum=$(($sum+$val))
     done
-    avg=$(($sum / $series_length))
-    echo "Average of the series: $avg"
+    local avg=$(($sum / $series_length))
+    echo "[+] Average of the series: $avg"
+}
+
+# Function to print the length of the series.
+getLength(){
+    echo -e "The length is:\n$series_length"
 }
 
 # The main function that keeps the menu-driven program running.
 main()
 {
+    series_initialized=false
     while true; do
         menu
-        read -p "Enter your choice (a-i): " choice
+        read -p "[!] Enter your choice (a-i): " choice
+        #making sure that before he does any operation he will assign the series for once at least
+        if [[ "$choice" != "a" && "$choice" != "i" ]] && ! $series_initialized; then
+            echo "[-] Please input a series first (option a)."
+            continue
+        fi
         case $choice in
             a)
                 updateInput $series
@@ -138,15 +150,18 @@ main()
                 getAVG
                 ;;
             g)
-                echo -e "The length is:\n$series_length"
+                getLength
                 ;;
             h)
                 getSum
                 ;;
             i) echo "Exiting..."
                 exit ;;
-            *) echo "Invalid choice! Please select a-i." ;;
+            *) echo "[-] Invalid choice! Please select a-i." ;;
         esac
+        # Wait for the user to press enter before clearing the screen and showing the menu again
+        read -p "Press enter to continue..."
+        clear
     done
 }
 
