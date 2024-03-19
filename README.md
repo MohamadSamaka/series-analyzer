@@ -9,7 +9,7 @@ To get started with the Series Analyzer, follow these simple steps:
 1. Clone or download the script to your local machine.
 2. Open your terminal.
 3. Navigate to the script's directory.
-4. Execute the script by running `./app.sh.sh`.
+4. Execute the script by running `./app.sh`.
 5. Use the menu to choose an operation by entering the corresponding letter.
 
 ## Menu Options
@@ -46,7 +46,7 @@ The script contains several functions to support its functionality:
 ## Example Usage
 
 ```bash
-$ ./app.sh.sh
+$ ./app.sh
 Series Analyzer Menu:
 a. Input a Series
 b. Display the series in the order it was entered.
