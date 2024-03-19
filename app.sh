@@ -20,7 +20,7 @@ menu()
 }
 
 # Function to validate if the input is a positive number.
-isPositiveNumver() {
+isPositiveNumber() {
     local re='^[0-9]+$'
     if [[ $1 =~ $re ]] && [ $1 -ge 0 ]; then
         return 0
@@ -38,7 +38,7 @@ validateInput()
         return 1
     fi
     for num in ${seriesToValidate[@]}; do
-        if ! isPositiveNumver $num; then
+        if ! isPositiveNumber $num; then
             echo "[-] The numbers need to be positive!"
             return 1
         fi
