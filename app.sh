@@ -30,7 +30,7 @@ isPositiveNumber() {
 # Function to validate the input series. It checks for at least three numbers and positivity.
 validateInput(){   
     local -a seriesToValidate=("$@") # -a means we are declaring an array
-    local series_length="${#seriesToValidate[@]}"
+    local series_length=(${#seriesToValidate[@]})
     if (( series_length < 3)); then
         echo "[-] Error: you need to enter at least three numbers!"
         return 1
@@ -52,8 +52,8 @@ updateInput(){
     while ! validateInput ${input[@]}; do
         read -p "[!] Renter numbers separated by spaces: " input
     done 
-    series=("${input[@]}")
-    series_length="${#input[@]}"
+    series=(${input[@]})
+    series_length=(${#series[@]})
     series_initialized=true  # Update the flag
 }
 
@@ -70,8 +70,8 @@ displayedSorted(){
 
 # Function to find and display the maximum value in the series.
 getMaxNumber(){
-    local max=${series[0]}
-    for val in "${series[@]}"; do
+    max=0
+    for val in ${series[@]}; do
         if (($val > $max)); then
             max=$val
         fi
@@ -81,8 +81,8 @@ getMaxNumber(){
 
 # Function to find and display the minimum value in the series.
 getMinNumber(){
-    local min=${series[0]}
-    for val in "${series[@]}"; do
+    local min=(${series[0]})
+    for val in ${series[@]}; do
         if (($val < $min)); then
             min=$val
         fi
@@ -93,7 +93,7 @@ getMinNumber(){
 # Function to calculate and display the sum of the series.
 getSum(){
     local sum=0
-    for val in "${series[@]}"; do
+    for val in ${series[@]}; do
         sum=$(($sum+$val))
     done
     echo "[+] Sum of the series: $sum"
@@ -102,10 +102,10 @@ getSum(){
 # Function to calculate and display the average value of the series.
 getAVG(){
     local sum=0
-    for val in "${series[@]}"; do
+    for val in ${series[@]}; do
         sum=$(($sum+$val))
     done
-    local avg=$(($sum / $series_length))
+    local avg=$(echo "scale=2; $sum / $series_length" | bc -l)
     echo "[+] Average of the series: $avg"
 }
 
