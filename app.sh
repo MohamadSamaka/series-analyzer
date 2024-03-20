@@ -5,8 +5,7 @@
 # such as sorting, finding the max/min value, calculating the average, etc.
 
 # Function to display the main menu options.
-menu()
-{
+menu(){
     echo "Series Analyzer Menu:"
     echo "a. Input a Series"
     echo "b. Display the series in the order it was entered."
@@ -29,8 +28,7 @@ isPositiveNumber() {
 }
 
 # Function to validate the input series. It checks for at least three numbers and positivity.
-validateInput()
-{   
+validateInput(){   
     local -a seriesToValidate=("$@") # -a means we are declaring an array
     local series_length="${#seriesToValidate[@]}"
     if (( series_length < 3)); then
@@ -48,12 +46,11 @@ validateInput()
 
 
 # Function for updating the input series. It also validates the input using validateInput function.
-updateInput()
-{ 
+updateInput(){ 
     local -a input
-    read -p "[!] Enter numbers separated by spaces:" -ra input
+    read -p "[!] Renter numbers separated by spaces: " input
     while ! validateInput ${input[@]}; do
-        read -p "[!] Renter numbers separated by spaces:" input
+        read -p "[!] Renter numbers separated by spaces: " input
     done 
     series=("${input[@]}")
     series_length="${#input[@]}"
@@ -61,8 +58,7 @@ updateInput()
 }
 
 # Function to display the input series as it was entered.
-displaySeries()
-{
+displaySeries(){
     echo "[+] This is your series: ${series[*]}"
 }
 
@@ -115,24 +111,33 @@ getAVG(){
 
 # Function to print the length of the series.
 getLength(){
-    echo -e "The length is:\n$series_length"
+    echo -e "[+] The length is:\n$series_length"
+}
+
+#Function to Wait for the user to press enter before clearing the screen and showing the menu again
+waitThenClear(){
+    read -p "[!] Press enter to continue..."
+    clear
 }
 
 # The main function that keeps the menu-driven program running.
 main()
 {
+    # local series
     series_initialized=false
     while true; do
         menu
         read -p "[!] Enter your choice (a-i): " choice
+
         #making sure that before he does any operation he will assign the series for once at least
         if [[ "$choice" != "a" && "$choice" != "i" ]] && ! $series_initialized; then
             echo "[-] Please input a series first (option a)."
+            waitThenClear
             continue
         fi
         case $choice in
             a)
-                updateInput $series
+                updateInput
                 ;;
             b)
                 displaySeries
@@ -159,9 +164,7 @@ main()
                 exit ;;
             *) echo "[-] Invalid choice! Please select a-i." ;;
         esac
-        # Wait for the user to press enter before clearing the screen and showing the menu again
-        read -p "Press enter to continue..."
-        clear
+        waitThenClear
     done
 }
 
