@@ -18,8 +18,8 @@ Ensure you have a Bash shell available on your system. This script is compatible
 
 1. Clone or download the script to your local machine.
 2. Open your terminal and navigate to the script's directory.
-3. Grant execution permissions to the script (if necessary) with `chmod +x series_analyzer.sh`.
-4. Run the script by executing `./series_analyzer.sh`.
+3. Grant execution permissions to the script (if necessary) with `chmod +x app.sh`.
+4. Run the script by executing `./app.sh`.
 
 ## Usage
 
@@ -49,7 +49,7 @@ This script is structured around key functions to enhance modularity and ease of
 ## Example Session
 
 ```bash
-$ ./series_analyzer.sh
+$ ./app.sh
 Series Analyzer Menu:
 a. Input a Series
 ...
